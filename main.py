@@ -3,7 +3,7 @@ import time
 from flask import Flask
 from selenium import webdriver
 
-from setting import USERNAME, PASSWORD
+from settings import USERNAME, PASSWORD
 
 app = Flask(__name__)
 
