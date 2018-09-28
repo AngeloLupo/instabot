@@ -1,12 +1,9 @@
 import time
 
-from flask import Flask
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 from settings import USERNAME, PASSWORD, PROFILE
-
-app = Flask(__name__)
 
 
 def get_driver():
