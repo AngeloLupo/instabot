@@ -1,5 +1,6 @@
 import time
 import datetime
+import json
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -59,54 +60,59 @@ def go_to_profile_from_home(driver):
 
 
 def open_followers_modal_from_profile(driver):
-    link_to_followers = driver.find_element_by_xpath('/html/body/span/section/main/div/header/section/ul/li[2]/a')
+    # link_to_followers = driver.find_element_by_xpath('/html/body/span/section/main/div/header/section/ul/li[2]/a')
+    link_to_followers = find_elem_by_href(driver, 'a', '/{}/followers/'.format(PROFILE))
     link_to_followers.click()
     time.sleep(3)
 
 
 def get_list_of_followers(driver):
     lists = driver.find_elements_by_tag_name('ul')
-    list_of_followers = lists[2]
+    list_of_followers = lists[-1]
     last_follower = ''
     while last_follower != list_of_followers.find_elements_by_tag_name('li')[-1]:
         last_follower = list_of_followers.find_elements_by_tag_name('li')[-1]
         scroll_to_element(driver, last_follower)
-        time.sleep(0.4)
+        time.sleep(0.9)
     return list_of_followers.find_elements_by_tag_name('li')
 
 
 def save_followers(follower_list):
     time_string = datetime.datetime.now().strftime('%Y%m%d%H%M')
     file = 'followers/{}'.format(time_string)
+    dict_followers = {}
+    for item in follower_list:
+        dict_followers[item[0]] = [item[1], item[2]]
+
+    json_followers = json.dumps(dict_followers)
     with open(file, 'w') as f:
-        for item in follower_list:
-            f.write(str(item))
+        f.write(json_followers)
+        f.close()
 
 
 def process_followers(followers):
-    items_list = followers.split("\\n")
-    counter = 0
+
     pretty_followers = []
-    while counter <= len(items_list)-1:
-        username = items_list[counter]
-        if items_list[counter+1] == 'Follow' or items_list[counter+1] == 'Following':
-            pretty_followers.append([
-                username,
-                '',
-                items_list[counter+1]
-            ])
-            counter = counter + 2
+
+    for x in followers:
+        s = x.text.split("\n")
+        if len(s) == 2:
+            pretty_followers.append(
+                [
+                    s[0],
+                    '',
+                    s[1]
+                ]
+            )
         else:
             pretty_followers.append(
                 [
-                    items_list[counter],
-                    items_list[counter + 1],
-                    items_list[counter + 2]
+                    s[0],
+                    s[1],
+                    s[2]
                 ]
             )
-            counter = counter + 3
     save_followers(pretty_followers)
-
 
 
 def main():
