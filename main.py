@@ -39,7 +39,7 @@ def login(driver):
     username.send_keys(USERNAME)
     password = elems[1]
     password.send_keys(PASSWORD)
-    login_button = find_elem_by_content(driver, 'button', 'Log in')
+    login_button = find_elem_by_content(driver, 'div', 'Log in')
     login_button.click()
     time.sleep(3)
 
