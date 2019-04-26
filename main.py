@@ -41,7 +41,7 @@ def login(driver):
     password.send_keys(PASSWORD)
     try:
         login_button = find_elem_by_content(driver, 'div', 'Log in')
-    except selenium.common.exceptions.NoSuchElementException:
+    except NoSuchElementException:
         login_button = find_elem_by_content(driver, 'div', 'Log In')
     login_button.click()
     time.sleep(3)
@@ -59,7 +59,7 @@ def refuse_notifications(driver):
 def go_to_profile_from_home(driver):
     link_to_profile = find_elem_by_content(driver, 'a', PROFILE)
     link_to_profile.click()
-    time.sleep(2)
+    time.sleep(4)
 
 
 def open_followers_modal_from_profile(driver):
